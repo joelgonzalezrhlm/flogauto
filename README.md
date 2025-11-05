@@ -41,27 +41,29 @@ Desarrollado como simulación de un entorno **SOC L1 (detección y respuesta ini
 
 ## 🔧 Despliegue paso a paso (CLI)
 
-1. Crear los buckets
+**1. Crear los buckets**
 
 aws s3api create-bucket --bucket flogauto-logs --region eu-west-1 --create-bucket-configuration LocationConstraint=eu-west-1
 
 aws s3api create-bucket --bucket flogauto-reports --region eu-west-1 --create-bucket-configuration LocationConstraint=eu-west-1
   
-2. Crear y suscribirse a SNS
+**2. Crear y suscribirse a SNS**
+
 aws sns create-topic --name flogauto-alerts --region eu-west-1
-ARN: arn:aws:sns:eu-west-1:850017502340:flogauto-alerts
 
 aws sns subscribe --topic-arn arn:aws:sns:eu-west-1:850017502340:flogauto-alerts --protocol email --notification-endpoint awsjowi@gmail.com --region eu-west-1
 
-3. Crear política de IAM con permisos mínimos
+**3. Crear política de IAM con permisos mínimos**
+
 aws iam create-policy --policy-name flogauto-policy --policy-document file://flogauto-policy.json
 
-4. Crear ROL para Lambda
+**4. Crear ROL para Lambda**
+   
 aws iam create-role --role-name flogauto-lambda-role --assume-role-policy-document file://trust-policy.json
 
     Confianza: Se le adjuntó una Política de Confianza que permite al servicio AWS Lambda (lambda.amazonaws.com) asumir este rol.
 
-5. Enlazar rol con políticas
+**5. Enlazar rol con políticas**
 
 aws iam attach-role-policy --role-name flogauto-lambda-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
@@ -71,9 +73,9 @@ aws iam attach-role-policy --role-name flogauto-lambda-role --policy-arn arn:aws
 
     Permisos de Aplicación (Custom): Se le adjuntó tu política personalizada, flogauto-policy, que define las interacciones de tu código con S3 y SNS.
 
-6. Crea una carpeta lambda_src y dentro un archivo flogauto_analyzer.py
+**6. Crear archivo flogauto_analyzer.py para Lambda**
 
-7. Crear función Lambda
+**7. Crear función Lambda**
 
 aws lambda create-function --function-name flogauto-analyzer --runtime python3.9 --role arn:aws:iam::850017502340:role/flogauto-lambda-role --handler flogauto_analyzer.lambda_handler --zip-file fileb://lambda_src.zip --timeout 60 --memory-size 512 --region eu-west-1
 
@@ -86,16 +88,17 @@ aws lambda create-function --function-name flogauto-analyzer --runtime python3.9
 
 ARN: arn:aws:lambda:eu-west-1:850017502340:function:flogauto-analyzer
 
-8. Dar permiso a S3 para que pueda invocar a Lambda
+**8. Dar permiso a S3 para que pueda invocar a Lambda**
+
 Listar buckets: aws s3api list-buckets
 
 aws lambda add-permission --function-name flogauto-analyzer --statement-id s3invoke-flogauto --action "lambda:InvokeFunction" --principal s3.amazonaws.com --source-arn arn:aws:s3:::flogauto-logs --region eu-west-1
 
-9. Crear la notificación de S3
+**9. Crear la notificación de S3**
 
 aws s3api put-bucket-notification-configuration --bucket flogauto-logs --notification-configuration file://notificacion.json
 
-10. Subir logs de prueba
+**10. Subir logs de prueba**
 
 Ejemplo: echo '192.168.1.1 - - [05/Nov/2025:17:40:00 +0000] "POST /login.php HTTP/1.1" 401 Unauthorized 1234' | Out-File -Encoding ASCII test-final-run.log
 
