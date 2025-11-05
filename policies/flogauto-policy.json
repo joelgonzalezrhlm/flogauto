@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadLogs",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::flogauto-logs",
+        "arn:aws:s3:::flogauto-logs/*"
+      ]
+    },
+    {
+      "Sid": "WriteReports",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Resource": [
+        "arn:aws:s3:::flogauto-reports",
+        "arn:aws:s3:::flogauto-reports/*"
+      ]
+    },
+    {
+      "Sid": "AllowSNSPublish",
+      "Effect": "Allow",
+      "Action": "sns:Publish",
+      "Resource": "arn:aws:sns:eu-west-1:850017502340:flogauto-alerts"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "LambdaFunctionConfigurations": [
+    {
+      "Id": "IncomingLogsTrigger",
+      "LambdaFunctionArn": "arn:aws:lambda:eu-west-1:850017502340:function:flogauto-analyzer",
+      "Events": ["s3:ObjectCreated:*"],
+      "Filter": {
+        "Key": {
+          "FilterRules": [
+            {"Name": "prefix", "Value": "incoming/"}
+          ]
+        }
+      }
+    }
+  ]
+}
