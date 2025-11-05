@@ -33,9 +33,9 @@ Desarrollado como simulación de un entorno **SOC L1 (detección y respuesta ini
 
 | Tipo de ataque   | Expresión Regular                             | Ejemplo detectado |
 |------------------|-----------------------------------------------|-------------------|
-| SQL Injection    | `select|union|insert|drop|delete`             | `UNION SELECT user,pass FROM admin` |
-| XSS              | `<script>|%3Cscript|javascript:|onerror=`     | `<script>alert('x')</script>` |
-| Brute Force      | `401 Unauthorized|Invalid password|login`     | `401 Unauthorized` |
+| SQL Injection    | select|union|insert|drop|delete`             | `UNION SELECT user,pass FROM admin` |
+| XSS              | <script>|%3Cscript|javascript:|onerror=`     | `<script>alert('x')</script>` |
+| Brute Force      | 401 Unauthorized|Invalid password|login`     | `401 Unauthorized` |
 
 ---
 
